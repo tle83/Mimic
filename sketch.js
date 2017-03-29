@@ -7,8 +7,11 @@ Tuyet-Ngoc Le
 var c,d,e,f,g,a,b;
 var musicArray;
 var seq;
+var synth;
 
 var isPlaying;
+var isRecording;
+var stop;
 
 function preload(){
 
@@ -19,8 +22,11 @@ function setup(){
 	background(255);
 	musicArray = new Array();
 	isPlaying = false;
+	isRecording = false;
+	stop = true;
 
-	seq = new Tone.Sequence(synthNotes, musicArray);
+	synth = new Tone.PolySynth(4, Tone.MonoSynth).toMaster();
+	seq = new Tone.Sequence(synthNotes, musicArray, '8n');
 
 	//7 notes
 	c = false;
@@ -33,9 +39,8 @@ function setup(){
 }
 
 function draw(){
-	//musicNote(60, 80);
-	musicLine(230);
-	
+	musicLine(40, 230);
+
 	if(c){
 		noteC(70*2);
 	}
@@ -58,13 +63,17 @@ function draw(){
 		noteB(70*8);
 	}
 	if(isPlaying){
-		seq.start("0");
+		seq.start("0").stop("8m");
 	}
+
+	playButton();
+	recordButton();
+	stopButton();
 }
 
 //GRAPHIC
 function keyPressed(){
-	console.log(keyCode);
+	console.log(key);
 	if(keyCode == 67){
 		c = true;
 	}
@@ -86,8 +95,60 @@ function keyPressed(){
 	if(keyCode == 66){
 		b = true;
 	}
-	append(musicArray, keyCode);
+	if(isRecording == true && stop == false){
+		append(musicArray, key + "4");
+	}
 	print(musicArray);
+}
+
+function mousePressed(){
+	//rect(width / 20, 400, 50, 50, 10);
+	if((mouseX > width / 20) && (mouseX < (width / 20) + 50) &&
+		(mouseY > 400) && (mouseY < 400 + 50)){
+			isPlaying = true;
+			print("Playing");
+		}
+	if((mouseX > width / 7) && (mouseX < (width / 7) + 50) &&
+		(mouseY > 400) && (mouseY < 400 + 50)){
+			isRecording = true;
+			stop = false;
+			print("Recording");
+		}
+	if((mouseX > width / 4.6) && (mouseX < (width / 4.6) + 50) &&
+		(mouseY > 400) && (mouseY < 400 + 50)){
+			stop = true;
+			print("Stopped");
+		}
+}
+
+function playButton(){
+	fill(255);
+	stroke(0);
+	strokeWeight(2);
+	rect(width / 20, 400, 50, 50, 10);
+
+	fill(137, 253, 109);
+	triangle(width / 13, 410, width / 13, 440, width / 10, 425);
+}
+
+function recordButton(){
+	fill(255);
+	stroke(0);
+	strokeWeight(2);
+	rect(width / 7.5, 400, 50, 50, 10);
+
+	fill(250, 16, 76);
+	ellipse(width / 6, 425, 30, 30);
+}
+
+function stopButton(){
+	fill(255);
+	stroke(0);
+	strokeWeight(2);
+	rect(width / 4.6, 400, 50, 50, 10);
+
+	fill(250, 16, 76);
+	rect(width / 4.25, 413, 25, 25);
 }
 
 function musicNote(x,y){
@@ -97,14 +158,14 @@ function musicNote(x,y){
 	//rect(x+5, y-35, 20, 8);
 }
 
-function musicLine(y){
+function musicLine(x, y){
 	fill(0);
 	noStroke();
-	rect(50, y-100, 600, 3);
-	rect(50, y-125, 600, 3);
-	rect(50, y-150, 600, 3);
-	rect(50, y-175, 600, 3);
-	rect(50, y-200, 600, 3);
+	rect(x, y-100, 600, 3);
+	rect(x, y-125, 600, 3);
+	rect(x, y-150, 600, 3);
+	rect(x, y-175, 600, 3);
+	rect(x, y-200, 600, 3);
 }
 //each note is 40 pixel apart
 function noteC(x){
@@ -135,8 +196,6 @@ function noteA(x){
 function noteB(x){
 	musicNote(x, 80);
 }
-
-
 
 //AUDIO
 function synthNotes(time, note){
