@@ -8,6 +8,7 @@ var c,d,e,f,g,a,b;
 var musicArray;
 var seq;
 var synth;
+var singleSynth;
 
 var isPlaying = false;
 var isRecording = false;
@@ -37,6 +38,7 @@ function setup(){
 
 	synth = new Tone.PolySynth(4, Tone.MonoSynth).toMaster();
 	seq = new Tone.Sequence(synthNotes, musicArray, '8n');
+	singleSynth = new Tone.Synth().toMaster();
 
 }
 
@@ -51,7 +53,7 @@ function draw(){
 	noteB(70*8);
 
 	if(isPlaying == true){
-		seq.start("0").stop("8m");
+		//seq.start(0).stop("8m");
 	}
 
 	playButton();
@@ -70,6 +72,7 @@ function keyPressed(){
 		colorG = color(0);
 		colorA = color(0);
 		colorB = color(0);
+		singleSynth.triggerAttackRelease("C4", "8n");
 
 	}
 	else if(keyCode == 68){
@@ -80,6 +83,7 @@ function keyPressed(){
 		colorG = color(0);
 		colorA = color(0);
 		colorB = color(0);
+		singleSynth.triggerAttackRelease("D4", "8n");
 
 	}
 	else if(keyCode == 69){
@@ -90,6 +94,7 @@ function keyPressed(){
 		colorG = color(0);
 		colorA = color(0);
 		colorB = color(0);
+		singleSynth.triggerAttackRelease("E4", "8n");
 	}
 	else if(keyCode == 70){
 		colorC = color(0);
@@ -99,6 +104,7 @@ function keyPressed(){
 		colorG = color(0);
 		colorA = color(0);
 		colorB = color(0);
+		singleSynth.triggerAttackRelease("F4", "8n");
 	}
 	else if(keyCode == 71){
 		colorC = color(0);
@@ -108,6 +114,7 @@ function keyPressed(){
 		colorG = color(161, 88, 220);
 		colorA = color(0);
 		colorB = color(0);
+		singleSynth.triggerAttackRelease("G4", "8n");
 	}
 	else if(keyCode == 65){
 		colorC = color(0);
@@ -117,6 +124,7 @@ function keyPressed(){
 		colorG = color(0);
 		colorA = color(161, 88, 220);
 		colorB = color(0);
+		singleSynth.triggerAttackRelease("A4", "8n");
 	}
 	else if(keyCode == 66){
 		colorC = color(0);
@@ -126,6 +134,7 @@ function keyPressed(){
 		colorG = color(0);
 		colorA = color(0);
 		colorB = color(161, 88, 220);
+		singleSynth.triggerAttackRelease("B4", "8n");
 	}
 	if(isRecording == true && stop == false){
 		append(musicArray, key + "4");
@@ -146,7 +155,10 @@ function mousePressed(){
 			for(var i = 0; i < musicArray.length; i++){
 				print(musicArray[i]);
 			}
-		}
+			for(var j = 0; j < musicArray.length; j++){
+				singleSynth.triggerAttackRelease(musicArray[j], "8n");
+			}
+	}
 	if((mouseX > width / 7) && (mouseX < (width / 7) + 50) &&
 		(mouseY > 400) && (mouseY < 400 + 50)){
 			isRecording = true;
