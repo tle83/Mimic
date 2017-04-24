@@ -34,12 +34,20 @@ function setup(){
 
 	createCanvas(720, 480);
 	background(255);
-	musicArray = new Array();
+	musicArray = [];
 
 	synth = new Tone.PolySynth(4, Tone.MonoSynth).toMaster();
-	seq = new Tone.Sequence(synthNotes, musicArray, '8n');
+	synth.volume.value = -12;
+
 	singleSynth = new Tone.Synth().toMaster();
 
+	Tone.Transport.bpm = 120;
+	Tone.Transport.schedule(triggerSynth, 0);
+
+	//test
+	var n = ['d4', 'e4', 'd4', 'a4', 'g4'];
+	seq = new Tone.Sequence(synthNotes, musicArray, '1m');
+	seq.start('0').stop('1m');
 }
 
 function draw(){
@@ -53,7 +61,13 @@ function draw(){
 	noteB(70*8);
 
 	if(isPlaying == true){
-		//seq.start(0).stop("8m");
+		//PLACE PLAYING ANIMATION HERE
+	}
+	if( isRecording == true){
+		//PLACE RECORDING ANIMATION HERE
+	}
+	if(stop == true){
+		//PLACE IDLE ANIMATION HERE
 	}
 
 	playButton();
@@ -61,9 +75,23 @@ function draw(){
 	stopButton();
 }
 
+//AUDIO
+function synthNotes(time, note){
+	synth.triggerAttackRelease(note, '8n', time);
+}
+
+function triggerSynth(time){
+	synth.triggerAttackRelease('E2', '8n', time);
+}
+
 //GRAPHIC
 function keyPressed(){
 	console.log(key);
+
+	//test
+	if(keyCode == 49){
+		Tone.Transport.start();
+	}
 	if(keyCode == 67){
 		colorC = color(161, 88, 220);
 		colorD = color(0);
@@ -146,17 +174,21 @@ function mousePressed(){
 	//rect(width / 20, 400, 50, 50, 10);
 	if((mouseX > width / 20) && (mouseX < (width / 20) + 50) &&
 		(mouseY > 400) && (mouseY < 400 + 50)){
-			isPlaying = true;
-			print("Playing");
-			buttonColorPlay = color(100);
-			buttonColorRec = color(255);
-			buttonColorStop = color(255);
+			//isPlaying = true;
+			if(isPlaying){
+				print("Playing");
+				buttonColorPlay = color(100);
+				buttonColorRec = color(255);
+				buttonColorStop = color(255);
 
-			for(var i = 0; i < musicArray.length; i++){
-				print(musicArray[i]);
+				Tone.Transport.start();
+				print("Playing: " + musicArray);
+
+				isPlaying = false;
 			}
-			for(var j = 0; j < musicArray.length; j++){
-				singleSynth.triggerAttackRelease(musicArray[j], "8n");
+			else{
+				isPlaying = true;
+				//buttonColorPlay = color(255);
 			}
 	}
 	if((mouseX > width / 7) && (mouseX < (width / 7) + 50) &&
@@ -175,6 +207,8 @@ function mousePressed(){
 			buttonColorStop = color(100);
 			buttonColorPlay = color(255);
 			buttonColorRec = color(255);
+
+			Tone.Transport.stop();
 		}
 }
 
@@ -252,13 +286,4 @@ function noteA(x){
 
 function noteB(x){
 	musicNote(x, 80, colorB);
-}
-
-//AUDIO
-function synthNotes(time, note){
-	synth.triggerAttackRelease(note, '8n', time);
-}
-
-function triggerSynth(time){
-	synth.triggerAttackRelease('C2', '8n', time);
 }
