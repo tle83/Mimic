@@ -5,7 +5,6 @@ Tuyet-Ngoc Le
 **/
 
 var c,d,e,f,g,a,b;
-var musicArray;
 var seq;
 var synth;
 var singleSynth;
@@ -18,6 +17,9 @@ var buttonColorPlay;
 var buttonColorRec;
 var buttonColorStop;
 var colorC, colorD, colorE, colorF, colorG, colorA, colorB;
+
+var song1;
+var playerAnswer;
 
 function setup(){
 	buttonColorPlay = color(255);
@@ -34,19 +36,21 @@ function setup(){
 
 	createCanvas(720, 480);
 	background(255);
-	musicArray = [];
+	playerAnswer = [];
 
 	synth = new Tone.PolySynth(4, Tone.MonoSynth).toMaster();
+	//synth = new Tone.Synth().toMaster();
 	synth.volume.value = -12;
 
 	singleSynth = new Tone.Synth().toMaster();
 
 	Tone.Transport.bpm = 120;
 	Tone.Transport.schedule(triggerSynth, 0);
+	Tone.Transport.timeSignature = 4;
 
 	//test
-	var n = ['d4', 'e4', 'd4', 'a4', 'g4'];
-	seq = new Tone.Sequence(synthNotes, musicArray, '1m');
+	song1 = ['d4', 'e4', 'd4', 'a4', 'g4'];
+	seq = new Tone.Sequence(synthNotes, [song1], '1m');
 	seq.start('0').stop('1m');
 }
 
@@ -81,17 +85,12 @@ function synthNotes(time, note){
 }
 
 function triggerSynth(time){
-	synth.triggerAttackRelease('E2', '8n', time);
+	synth.triggerAttackRelease("c4", '8n', time);
 }
 
 //GRAPHIC
 function keyPressed(){
-	console.log(key);
-
-	//test
-	if(keyCode == 49){
-		Tone.Transport.start();
-	}
+	//console.log(key);
 	if(keyCode == 67){
 		colorC = color(161, 88, 220);
 		colorD = color(0);
@@ -165,9 +164,9 @@ function keyPressed(){
 		singleSynth.triggerAttackRelease("B4", "8n");
 	}
 	if(isRecording == true && stop == false){
-		append(musicArray, key + "4");
+		console.log(playerAnswer);
+		append(playerAnswer, key.toLowerCase() + "4");
 	}
-	print(musicArray);
 }
 
 function mousePressed(){
@@ -182,8 +181,7 @@ function mousePressed(){
 				buttonColorStop = color(255);
 
 				Tone.Transport.start();
-				print("Playing: " + musicArray);
-
+				console.log(playerAnswer);
 				isPlaying = false;
 			}
 			else{
@@ -209,6 +207,19 @@ function mousePressed(){
 			buttonColorRec = color(255);
 
 			Tone.Transport.stop();
+
+			var songs;
+			if(stop = true){
+				for(var i = 0; i < song1.length; i++){
+					song = song[i];
+					if(playerAnswer[i] == song[i]){
+						console.log("CORRECT");
+					}
+					else{
+						console.log("WRONG");
+					}
+				}
+			}
 		}
 }
 
