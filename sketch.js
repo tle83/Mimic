@@ -18,8 +18,12 @@ var buttonColorRec;
 var buttonColorStop;
 var colorC, colorD, colorE, colorF, colorG, colorA, colorB;
 
-var song1;
+var songs;
+var song1, song2, song3, song4, song5;
 var playerAnswer;
+var songPlaying;
+var songCount = 0;
+var playerCorrect = false;
 
 function setup(){
 	buttonColorPlay = color(255);
@@ -36,10 +40,11 @@ function setup(){
 
 	createCanvas(720, 480);
 	background(255);
+
 	playerAnswer = [];
+	songs = [];
 
 	synth = new Tone.PolySynth(4, Tone.MonoSynth).toMaster();
-	//synth = new Tone.Synth().toMaster();
 	synth.volume.value = -12;
 
 	singleSynth = new Tone.Synth().toMaster();
@@ -50,11 +55,21 @@ function setup(){
 
 	//test
 	song1 = ['d4', 'e4', 'd4', 'a4', 'g4'];
-	seq = new Tone.Sequence(synthNotes, [song1], '1m');
-	seq.start('0').stop('1m');
+	song2 = ['a4', 'g4', 'a4', 'b4', 'd4'];
+	song3 = ['a4', 'g4', 'e4', 'a4', 'c4', 'd4'];
+	song4 = ['a4', 'c4', 'f4', 'g4', 'd4', 'a4', 'b4', 'a4'];
+	song5 = [];
+	song6 = [];
+	songs = [song1, song2, song3, song4, song5, song6];
+
+	seq = new Tone.Sequence(synthNotes, songPlaying, '1m');
+	seq.start('2n').stop('1m');
+
 }
 
 function draw(){
+	songPlaying = songs[songCount];
+
 	musicLine(40, 230);
 	noteC(70*2);
 	noteD(70*3);
@@ -85,7 +100,7 @@ function synthNotes(time, note){
 }
 
 function triggerSynth(time){
-	synth.triggerAttackRelease("c4", '8n', time);
+	synth.triggerAttackRelease('E2', '8n', time);
 }
 
 //GRAPHIC
@@ -100,7 +115,6 @@ function keyPressed(){
 		colorA = color(0);
 		colorB = color(0);
 		singleSynth.triggerAttackRelease("C4", "8n");
-
 	}
 	else if(keyCode == 68){
 		colorC = color(0);
@@ -164,8 +178,8 @@ function keyPressed(){
 		singleSynth.triggerAttackRelease("B4", "8n");
 	}
 	if(isRecording == true && stop == false){
-		console.log(playerAnswer);
 		append(playerAnswer, key.toLowerCase() + "4");
+		console.log(playerAnswer);
 	}
 }
 
@@ -173,30 +187,28 @@ function mousePressed(){
 	//rect(width / 20, 400, 50, 50, 10);
 	if((mouseX > width / 20) && (mouseX < (width / 20) + 50) &&
 		(mouseY > 400) && (mouseY < 400 + 50)){
-			//isPlaying = true;
-			if(isPlaying){
-				print("Playing");
-				buttonColorPlay = color(100);
-				buttonColorRec = color(255);
-				buttonColorStop = color(255);
+			isPlaying = true;
+			print("Playing");
+			buttonColorPlay = color(100);
+			buttonColorRec = color(255);
+			buttonColorStop = color(255);
 
-				Tone.Transport.start();
-				console.log(playerAnswer);
-				isPlaying = false;
-			}
-			else{
-				isPlaying = true;
-				//buttonColorPlay = color(255);
-			}
+			Tone.Transport.start();
+			console.log("Notes being played: " + songPlaying);
+			
+
 	}
 	if((mouseX > width / 7) && (mouseX < (width / 7) + 50) &&
 		(mouseY > 400) && (mouseY < 400 + 50)){
 			isRecording = true;
 			stop = false;
+			playerAnswer = [];
 			print("Recording");
 			buttonColorRec = color(100);
 			buttonColorPlay = color(255);
 			buttonColorStop = color(255);
+
+			console.log("Song Playing: " + songPlaying);
 		}
 	if((mouseX > width / 4.6) && (mouseX < (width / 4.6) + 50) &&
 		(mouseY > 400) && (mouseY < 400 + 50)){
@@ -206,18 +218,27 @@ function mousePressed(){
 			buttonColorPlay = color(255);
 			buttonColorRec = color(255);
 
-			Tone.Transport.stop();
+			console.log("Song Count: " + songCount);
 
-			var songs;
+			Tone.Transport.stop();
+			var correctCount = 0;
 			if(stop = true){
-				for(var i = 0; i < song1.length; i++){
-					song = song[i];
-					if(playerAnswer[i] == song[i]){
-						console.log("CORRECT");
+				for(var i = 0; i < songPlaying.length; i++){
+					if(playerAnswer[i] == songPlaying[i]){
+						correctCount++;
 					}
-					else{
-						console.log("WRONG");
-					}
+				}
+				if(correctCount == songPlaying.length){
+					console.log("CORRECT");
+					playerCorrect = true;
+				}
+				if(correctCount != songPlaying.length){
+					console.log("WRONG");
+					playerCorrect = false;
+				}
+				if(playerCorrect){
+					songCount++;
+					
 				}
 			}
 		}
