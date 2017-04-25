@@ -18,12 +18,13 @@ var buttonColorRec;
 var buttonColorStop;
 var colorC, colorD, colorE, colorF, colorG, colorA, colorB;
 
-var songs;
+var songs = [];
 var song1, song2, song3, song4, song5;
 var playerAnswer;
 var songPlaying;
 var songCount = 0;
 var playerCorrect = false;
+
 
 function setup(){
 	buttonColorPlay = color(255);
@@ -42,33 +43,27 @@ function setup(){
 	background(255);
 
 	playerAnswer = [];
-	songs = [];
 
 	synth = new Tone.PolySynth(4, Tone.MonoSynth).toMaster();
-	synth.volume.value = -12;
 
 	singleSynth = new Tone.Synth().toMaster();
 
-	Tone.Transport.bpm = 120;
-	Tone.Transport.schedule(triggerSynth, 0);
-	Tone.Transport.timeSignature = 4;
+	Tone.Transport.bpm = 100;
+	//Tone.Transport.schedule(triggerSynth, 0);
 
-	//test
-	song1 = ['d4', 'e4', 'd4', 'a4', 'g4'];
-	song2 = ['a4', 'g4', 'a4', 'b4', 'd4'];
-	song3 = ['a4', 'g4', 'e4', 'a4', 'c4', 'd4'];
+	song1 = ['d4', 'e4', 'd4', 'a4', 'g4', 'b4', 'c4', 'g4'];
+	song2 = ['a4', 'g4', 'a4', 'b4', 'd4', 'd4', 'b4', 'g4'];
+	song3 = ['a4', 'g4', 'e4', 'a4', 'c4', 'd4', 'd4', 'b4'];
 	song4 = ['a4', 'c4', 'f4', 'g4', 'd4', 'a4', 'b4', 'a4'];
-	song5 = [];
-	song6 = [];
-	songs = [song1, song2, song3, song4, song5, song6];
-
-	seq = new Tone.Sequence(synthNotes, songPlaying, '1m');
-	seq.start('2n').stop('1m');
-
+	song5 = ['c4', 'd4', 'f4', 'c4', 'e4', 'g4', 'b4', 'e4'];
+	songs = [song1, song2, song3, song4, song5];
 }
 
 function draw(){
+
 	songPlaying = songs[songCount];
+	seq = new Tone.Sequence(synthNotes, songPlaying, '8n');
+	seq.start(0).stop('1m');
 
 	musicLine(40, 230);
 	noteC(70*2);
@@ -92,6 +87,7 @@ function draw(){
 	playButton();
 	recordButton();
 	stopButton();
+
 }
 
 //AUDIO
@@ -100,12 +96,19 @@ function synthNotes(time, note){
 }
 
 function triggerSynth(time){
-	synth.triggerAttackRelease('E2', '8n', time);
+//	synth.triggerAttackRelease('C4', '8n', time);
 }
 
 //GRAPHIC
 function keyPressed(){
 	//console.log(key);
+	if(keyCode == 49){
+		console.log(songPlaying);
+		console.log(songCount);
+		for(var i = 0; i < songPlaying.length; i++){
+			console.log(seq.at(i).value);
+		}
+	}
 	if(keyCode == 67){
 		colorC = color(161, 88, 220);
 		colorD = color(0);
@@ -184,31 +187,57 @@ function keyPressed(){
 }
 
 function mousePressed(){
-	//rect(width / 20, 400, 50, 50, 10);
 	if((mouseX > width / 20) && (mouseX < (width / 20) + 50) &&
 		(mouseY > 400) && (mouseY < 400 + 50)){
 			isPlaying = true;
 			print("Playing");
+
 			buttonColorPlay = color(100);
 			buttonColorRec = color(255);
 			buttonColorStop = color(255);
 
 			Tone.Transport.start();
 			console.log("Notes being played: " + songPlaying);
-			
-
+/*
+			for(var i = 0; i < songPlaying.length; i++){
+				if(songPlaying[i] == 'c4'){
+					print("c");
+				}
+				if(songPlaying[i]  == 'd4'){
+					print("d");
+				}
+				if(songPlaying[i]  == 'e4'){
+					print("e");
+				}
+				if(songPlaying[i]  == 'f4'){
+					print("f");
+				}
+				if(songPlaying[i]  == 'g4'){
+					print("g");
+				}
+				if(songPlaying[i]  == 'a4'){
+					print("a");
+				}
+				if(songPlaying[i]  == 'b4'){
+					print("b");
+				}
+			}*/
 	}
 	if((mouseX > width / 7) && (mouseX < (width / 7) + 50) &&
 		(mouseY > 400) && (mouseY < 400 + 50)){
 			isRecording = true;
 			stop = false;
+			
+			Tone.Transport.stop();
 			playerAnswer = [];
 			print("Recording");
+
 			buttonColorRec = color(100);
 			buttonColorPlay = color(255);
 			buttonColorStop = color(255);
 
 			console.log("Song Playing: " + songPlaying);
+			console.log("Song Count: " + songCount);
 		}
 	if((mouseX > width / 4.6) && (mouseX < (width / 4.6) + 50) &&
 		(mouseY > 400) && (mouseY < 400 + 50)){
@@ -238,7 +267,6 @@ function mousePressed(){
 				}
 				if(playerCorrect){
 					songCount++;
-					
 				}
 			}
 		}
