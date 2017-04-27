@@ -4,6 +4,7 @@ Tuyet-Ngoc Le
 	Final Project
 **/
 
+//AUDIO
 var c,d,e,f,g,a,b;
 var seq;
 var synth;
@@ -12,10 +13,6 @@ var singleSynth, singleSynth2;
 var isPlaying = false;
 var isRecording = false;
 var stop = true;
-
-var buttonColorPlay;
-var buttonColorRec;
-var buttonColorStop;
 
 var cNote = false;
 var dNote = false;
@@ -32,11 +29,19 @@ var songPlaying;
 var songCount = 0;
 var playerCorrect = false;
 
+//GRAPHIC
 var buttons;
 var music;
 var playButtonON = false;
 var recButtonON = false;
 var checkButtonOn = false;
+
+//HARDWARE
+var serial;
+var portName = "/dev/cu.usbmodem1411";
+var outByte = 0;
+var inByte;
+
 
 function preload(){
 	buttons = loadImage("Images/Buttons.png");
@@ -45,22 +50,13 @@ function preload(){
 
 
 function setup(){
-	//background
+
+
+	//GRAPHIC
 	createCanvas(1280, 720);
 	background(68, 203, 208);
 
-	buttonColorPlay = color(255);
-	buttonColorRec = color(255);
-	buttonColorStop = color(255);
-
-	colorC = color(0);
-	colorD = color(0);
-	colorE = color(0);
-	colorF = color(0);
-	colorG = color(0);
-	colorA = color(0);
-	colorB = color(0);
-
+	//AUDIO
 	playerAnswer = [];
 
 	synth = new Tone.PolySynth(4, Tone.MonoSynth).toMaster();
@@ -78,6 +74,12 @@ function setup(){
 	song4 = ['a4', 'c4', 'f4', 'g4', 'd4', 'a4', 'b4', 'a4'];
 	song5 = ['c4', 'd4', 'f4', 'c4', 'e4', 'g4', 'b4', 'e4'];
 	songs = [song1, song2, song3, song4, song5];
+
+	//HARDWARE
+	serial = new p5.SerialPort();
+	serial.on('data', serialEvent);
+	serial.on('error', serialError);
+	serial.open(portName);
 }
 
 function draw(){
@@ -142,6 +144,64 @@ function triggerSynth(time){
 //	synth.triggerAttackRelease('C4', '8n', time);
 }
 
+//HARDWARE
+function serialEvent(){
+	inByte = int(serial.read());
+	if(inByte == 5){
+		//singleSynth.triggerAttackRelease("C4", "8n");
+		if(isRecording){
+			append(playerAnswer, "C4");
+			console.log(playerAnswer);
+		}
+	}
+	if(inByte == 6){
+		singleSynth.triggerAttackRelease("D4", "8n");
+		if(isRecording){
+			append(playerAnswer, "D4");
+			console.log(playerAnswer);
+		}
+	}
+	if(inByte == 7){
+		singleSynth.triggerAttackRelease("E4", "8n");
+		if(isRecording){
+			append(playerAnswer, "E4");
+			console.log(playerAnswer);
+		}
+	}
+	if(inByte == 8){
+		singleSynth.triggerAttackRelease("F4", "8n");
+		if(isRecording){
+			append(playerAnswer, "F4");
+			console.log(playerAnswer);
+		}
+	}
+	if(inByte == 9){
+		singleSynth.triggerAttackRelease("G4", "8n");
+		if(isRecording){
+			append(playerAnswer, "G4");
+			console.log(playerAnswer);
+		}
+	}
+	if(inByte == 10){
+		singleSynth.triggerAttackRelease("A4", "8n");
+		if(isRecording){
+			append(playerAnswer, "A4");
+			console.log(playerAnswer);
+		}
+	}
+	if(inByte == 11){
+		singleSynth.triggerAttackRelease("B4", "8n");
+		if(isRecording){
+			append(playerAnswer, "B4");
+			console.log(playerAnswer);
+		}
+	}
+}
+
+function serialError(err) {
+  print('Something went wrong with the serial port. ' + err);
+}
+
 //GRAPHIC
 function keyPressed(){
 	//console.log(key);
@@ -151,6 +211,9 @@ function keyPressed(){
 		for(var i = 0; i < songPlaying.length; i++){
 			console.log(seq.at(i).value);
 		}
+	}
+	if(keyCode == 50){
+		console.log(inByte);
 	}
 	if(keyCode == 67){
 		singleSynth.triggerAttackRelease("C4", "8n");
@@ -236,6 +299,8 @@ function mousePressed(){
 			playButtonON = true;
 			recButtonON = false;
 			checkButtonOn = false;
+
+			serial.write(20);
 
 			isPlaying = true;
 			print("Playing");
