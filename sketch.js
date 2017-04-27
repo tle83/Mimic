@@ -7,7 +7,7 @@ Tuyet-Ngoc Le
 var c,d,e,f,g,a,b;
 var seq;
 var synth;
-var singleSynth;
+var singleSynth, singleSynth2;
 
 var isPlaying = false;
 var isRecording = false;
@@ -32,7 +32,6 @@ var songPlaying;
 var songCount = 0;
 var playerCorrect = false;
 
-var bg;
 var buttons;
 var music;
 var playButtonON = false;
@@ -65,8 +64,8 @@ function setup(){
 	playerAnswer = [];
 
 	synth = new Tone.PolySynth(4, Tone.MonoSynth).toMaster();
-
 	singleSynth = new Tone.Synth().toMaster();
+	singleSynth2 = new Tone.Synth().toMaster();
 
 	Tone.Transport.loop = true;
 	Tone.Transport.loopEnd = '5m';
@@ -241,7 +240,60 @@ function mousePressed(){
 			isPlaying = true;
 			print("Playing");
 
-			Tone.Transport.start();
+			if(isPlaying){
+				if(songCount == 0){
+					singleSynth2.triggerAttackRelease('d4', '8n', '+0.5');
+					singleSynth2.triggerAttackRelease('e4', '8n', '+1.0');
+					singleSynth2.triggerAttackRelease('d4', '8n', '+1.5');
+					singleSynth2.triggerAttackRelease('a4', '8n', '+2.0');
+					singleSynth2.triggerAttackRelease('g4', '8n', '+2.5');
+					singleSynth2.triggerAttackRelease('b4', '8n', '+3.0');
+					singleSynth2.triggerAttackRelease('c4', '8n', '+3.5');
+					singleSynth2.triggerAttackRelease('g4', '8n', '+4.0');
+				}
+				if(songCount == 1){
+					singleSynth2.triggerAttackRelease('a4', '8n', '+0.5');
+					singleSynth2.triggerAttackRelease('g4', '8n', '+1.0');
+					singleSynth2.triggerAttackRelease('a4', '8n', '+1.5');
+					singleSynth2.triggerAttackRelease('b4', '8n', '+2.0');
+					singleSynth2.triggerAttackRelease('d4', '8n', '+2.5');
+					singleSynth2.triggerAttackRelease('d4', '8n', '+3.0');
+					singleSynth2.triggerAttackRelease('b4', '8n', '+3.5');
+					singleSynth2.triggerAttackRelease('g4', '8n', '+4.0');
+				}
+				if(songCount == 2){
+					singleSynth2.triggerAttackRelease('a4', '8n', '+0.5');
+					singleSynth2.triggerAttackRelease('g4', '8n', '+1.0');
+					singleSynth2.triggerAttackRelease('e4', '8n', '+1.5');
+					singleSynth2.triggerAttackRelease('a4', '8n', '+2.0');
+					singleSynth2.triggerAttackRelease('c4', '8n', '+2.5');
+					singleSynth2.triggerAttackRelease('d4', '8n', '+3.0');
+					singleSynth2.triggerAttackRelease('d4', '8n', '+3.5');
+					singleSynth2.triggerAttackRelease('b4', '8n', '+4.0');
+				}
+				if(songCount == 3){
+					singleSynth2.triggerAttackRelease('a4', '8n', '+0.5');
+					singleSynth2.triggerAttackRelease('c4', '8n', '+1.0');
+					singleSynth2.triggerAttackRelease('f4', '8n', '+1.5');
+					singleSynth2.triggerAttackRelease('g4', '8n', '+2.0');
+					singleSynth2.triggerAttackRelease('d4', '8n', '+2.5');
+					singleSynth2.triggerAttackRelease('a4', '8n', '+3.0');
+					singleSynth2.triggerAttackRelease('b4', '8n', '+3.5');
+					singleSynth2.triggerAttackRelease('a4', '8n', '+4.0');
+				}
+				if(songCount == 4){
+					singleSynth2.triggerAttackRelease('c4', '8n', '+0.5');
+					singleSynth2.triggerAttackRelease('d4', '8n', '+1.0');
+					singleSynth2.triggerAttackRelease('f4', '8n', '+1.5');
+					singleSynth2.triggerAttackRelease('c4', '8n', '+2.0');
+					singleSynth2.triggerAttackRelease('e4', '8n', '+2.5');
+					singleSynth2.triggerAttackRelease('g4', '8n', '+3.0');
+					singleSynth2.triggerAttackRelease('b4', '8n', '+3.5');
+					singleSynth2.triggerAttackRelease('e4', '8n', '+4.0');
+				}
+			}
+
+			//Tone.Transport.start();
 			console.log("Notes being played: " + songPlaying);
 	}
 	if((mouseX > 126) && (mouseX < 222) &&
@@ -253,7 +305,7 @@ function mousePressed(){
 			isRecording = true;
 			stop = false;
 			
-			Tone.Transport.stop();
+			//Tone.Transport.stop();
 			playerAnswer = [];
 			print("Recording");
 
@@ -268,7 +320,7 @@ function mousePressed(){
 
 			stop = true;
 			print("Checking");
-			Tone.Transport.stop();
+			//Tone.Transport.stop();
 			console.log("Song Count: " + songCount);
 
 			seq.mute = true;
