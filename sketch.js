@@ -6,8 +6,6 @@ Tuyet-Ngoc Le
 
 //AUDIO
 var c,d,e,f,g,a,b;
-var seq;
-var synth;
 var singleSynth, singleSynth2;
 
 var isPlaying = false;
@@ -50,8 +48,6 @@ function preload(){
 
 
 function setup(){
-
-
 	//GRAPHIC
 	createCanvas(1280, 720);
 	background(68, 203, 208);
@@ -59,14 +55,8 @@ function setup(){
 	//AUDIO
 	playerAnswer = [];
 
-	synth = new Tone.PolySynth(4, Tone.MonoSynth).toMaster();
 	singleSynth = new Tone.Synth().toMaster();
 	singleSynth2 = new Tone.Synth().toMaster();
-
-	Tone.Transport.loop = true;
-	Tone.Transport.loopEnd = '5m';
-	Tone.Transport.bpm = 100;
-	Tone.Transport.schedule(triggerSynth, 0);
 
 	song1 = ['d4', 'e4', 'd4', 'a4', 'g4', 'b4', 'c4', 'g4'];
 	song2 = ['a4', 'g4', 'a4', 'b4', 'd4', 'd4', 'b4', 'g4'];
@@ -84,8 +74,6 @@ function setup(){
 
 function draw(){
 	songPlaying = songs[songCount];
-	seq = new Tone.Sequence(synthNotes, songPlaying, '8n');
-	seq.start(0).stop('1m');
 
 	if(cNote == false){
 		noteC(200, 70, 0);
@@ -135,66 +123,107 @@ function draw(){
 	stopButton();
 }
 
-//AUDIO
-function synthNotes(time, note){
-	synth.triggerAttackRelease(note, '8n', time);
-}
-
-function triggerSynth(time){
-//	synth.triggerAttackRelease('C4', '8n', time);
-}
-
 //HARDWARE
 function serialEvent(){
 	inByte = int(serial.read());
 	if(inByte == 5){
-		//singleSynth.triggerAttackRelease("C4", "8n");
+		singleSynth.triggerAttackRelease("C4", "8n");
 		if(isRecording){
-			append(playerAnswer, "C4");
+			append(playerAnswer, "c4");
 			console.log(playerAnswer);
 		}
+		cNote = true;
+		dNote = false;
+		eNote = false; 
+		fNote = false; 
+		gNote = false; 
+		aNote = false; 
+		bNote = false; 
 	}
 	if(inByte == 6){
 		singleSynth.triggerAttackRelease("D4", "8n");
 		if(isRecording){
-			append(playerAnswer, "D4");
+			append(playerAnswer, "d4");
 			console.log(playerAnswer);
 		}
+		cNote = false;
+		dNote = true;
+		eNote = false; 
+		fNote = false; 
+		gNote = false; 
+		aNote = false; 
+		bNote = false; 
 	}
 	if(inByte == 7){
 		singleSynth.triggerAttackRelease("E4", "8n");
 		if(isRecording){
-			append(playerAnswer, "E4");
+			append(playerAnswer, "e4");
 			console.log(playerAnswer);
 		}
+		cNote = false;
+		dNote = false;
+		eNote = true; 
+		fNote = false; 
+		gNote = false; 
+		aNote = false; 
+		bNote = false; 
 	}
 	if(inByte == 8){
 		singleSynth.triggerAttackRelease("F4", "8n");
 		if(isRecording){
-			append(playerAnswer, "F4");
+			append(playerAnswer, "f4");
 			console.log(playerAnswer);
 		}
+		cNote = false;
+		dNote = false;
+		eNote = false; 
+		fNote = true; 
+		gNote = false; 
+		aNote = false; 
+		bNote = false; 
 	}
 	if(inByte == 9){
 		singleSynth.triggerAttackRelease("G4", "8n");
 		if(isRecording){
-			append(playerAnswer, "G4");
+			append(playerAnswer, "g4");
 			console.log(playerAnswer);
 		}
+		
+		cNote = false;
+		dNote = false;
+		eNote = false; 
+		fNote = false; 
+		gNote = true; 
+		aNote = false; 
+		bNote = false; 
 	}
 	if(inByte == 10){
 		singleSynth.triggerAttackRelease("A4", "8n");
 		if(isRecording){
-			append(playerAnswer, "A4");
+			append(playerAnswer, "a4");
 			console.log(playerAnswer);
 		}
+		cNote = false;
+		dNote = false;
+		eNote = false; 
+		fNote = false; 
+		gNote = false; 
+		aNote = true; 
+		bNote = false; 
 	}
 	if(inByte == 11){
 		singleSynth.triggerAttackRelease("B4", "8n");
 		if(isRecording){
-			append(playerAnswer, "B4");
+			append(playerAnswer, "b4");
 			console.log(playerAnswer);
 		}
+		cNote = false;
+		dNote = false;
+		eNote = false; 
+		fNote = false; 
+		gNote = false; 
+		aNote = false; 
+		bNote = true; 
 	}
 }
 
@@ -224,7 +253,6 @@ function keyPressed(){
 		gNote = false; 
 		aNote = false; 
 		bNote = false; 
-		
 	}
 	else if(keyCode == 68){
 		singleSynth.triggerAttackRelease("D4", "8n");
@@ -300,7 +328,7 @@ function mousePressed(){
 			recButtonON = false;
 			checkButtonOn = false;
 
-			serial.write(20);
+			serial.write(byte(20));
 
 			isPlaying = true;
 			print("Playing");
@@ -358,7 +386,6 @@ function mousePressed(){
 				}
 			}
 
-			//Tone.Transport.start();
 			console.log("Notes being played: " + songPlaying);
 	}
 	if((mouseX > 126) && (mouseX < 222) &&
@@ -369,8 +396,9 @@ function mousePressed(){
 
 			isRecording = true;
 			stop = false;
+
+			serial.write(byte(30));
 			
-			//Tone.Transport.stop();
 			playerAnswer = [];
 			print("Recording");
 
@@ -385,10 +413,8 @@ function mousePressed(){
 
 			stop = true;
 			print("Checking");
-			//Tone.Transport.stop();
 			console.log("Song Count: " + songCount);
 
-			seq.mute = true;
 			var correctCount = 0;
 			if(stop = true){
 				for(var i = 0; i < songPlaying.length; i++){
