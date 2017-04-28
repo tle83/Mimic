@@ -49,8 +49,9 @@ function preload(){
 
 function setup(){
 	//GRAPHIC
-	createCanvas(1280, 720);
-	background(68, 203, 208);
+	createCanvas(1024, 600);
+	background(58,87,117);
+	image(music, 440, 250, 96, 96, 192, 192, 96, 96);
 
 	//AUDIO
 	playerAnswer = [];
@@ -76,51 +77,57 @@ function draw(){
 	songPlaying = songs[songCount];
 
 	if(cNote == false){
-		noteC(200, 70, 0);
+		noteC(320-200, 350, 0);
 	}
 	if(cNote == true){
-		noteC(200, 70, 96);
+		noteC(320-200, 350, 96);
 	}
 	if(dNote == false){
-		noteD(320, 242, 0);
+		noteD(320-200, 170, 0);
 	}
 	if(dNote == true){
-		noteD(320, 242, 96);
+		noteD(320-200, 170, 96);
 	}
 	if(eNote == false){
-		noteE(480, 70, 0);
+		noteE(480-200, 90, 0);
 	}
 	if(eNote == true){
-		noteE(480, 70, 96);
+		noteE(480-200, 90, 96);
 	}
 	if(fNote == false){
-		noteF(640, 242, 0);
+		noteF(640-200, 20, 0);
 	}
 	if(fNote == true){
-		noteF(640, 242, 96);
+		noteF(640-200, 20, 96);
 	}
 	if(gNote == false){
-		noteG(800, 70, 0);
+		noteG(800-200, 90, 0);
 	}
 	if(gNote == true){
-		noteG(800, 70, 96);
+		noteG(800-200, 90, 96);
 	}
 	if(aNote == false){
-		noteA(960, 242, 0);
+		noteA(960-200, 170, 0);
 	}
 	if(aNote == true){
-		noteA(960, 242, 96);
+		noteA(960-200, 170, 96);
 	}
 	if(bNote == false){
-		noteB(1080, 70, 0);
+		noteB(960-200, 350, 0);
 	}
 	if(bNote == true){
-		noteB(1080, 70, 96);
+		noteB(960-200, 350, 96);
 	}
 
 	playButton();
 	recordButton();
 	stopButton();
+
+	image(music, 345 ,400, 288, 64, 0, 350, 288, 64);
+
+	textSize(18);
+	fill(255);
+	text(playerAnswer + " ", 390, 440);
 }
 
 //HARDWARE
@@ -233,16 +240,16 @@ function serialError(err) {
 
 //GRAPHIC
 function keyPressed(){
-	//console.log(key);
 	if(keyCode == 49){
 		console.log(songPlaying);
 		console.log(songCount);
-		for(var i = 0; i < songPlaying.length; i++){
-			console.log(seq.at(i).value);
-		}
 	}
 	if(keyCode == 50){
 		console.log(inByte);
+	}
+	if(keyCode == 51){
+		isRecording = true;
+		stop = false;
 	}
 	if(keyCode == 67){
 		singleSynth.triggerAttackRelease("C4", "8n");
@@ -318,21 +325,26 @@ function keyPressed(){
 	if(isRecording == true && stop == false){
 		append(playerAnswer, key.toLowerCase() + "4");
 		console.log(playerAnswer);
+		if(playerAnswer.length > 7){
+			stop = true;
+		}
 	}
 }
 
 function mousePressed(){
-	if((mouseX > 20) && (mouseX < 116) &&
-		(mouseY > 570) && (mouseY < 666)){
+	if((mouseX > 334) && (mouseX < 430) &&
+		(mouseY > 470) && (mouseY < 566)){
 			playButtonON = true;
 			recButtonON = false;
 			checkButtonOn = false;
 
 			serial.write(byte(20));
 
+			//checking icon
+			image(music, 440, 250, 96, 96, 192, 192, 96, 96);
+
 			isPlaying = true;
 			print("Playing");
-
 			if(isPlaying){
 				if(songCount == 0){
 					singleSynth2.triggerAttackRelease('d4', '8n', '+0.5');
@@ -388,8 +400,8 @@ function mousePressed(){
 
 			console.log("Notes being played: " + songPlaying);
 	}
-	if((mouseX > 126) && (mouseX < 222) &&
-		(mouseY > 570) && (mouseY < 666)){
+	if((mouseX > 440) && (mouseX < 536) &&
+		(mouseY > 470) && (mouseY < 566)){
 			playButtonON = false;
 			recButtonON = true;
 			checkButtonOn = false;
@@ -405,11 +417,19 @@ function mousePressed(){
 			console.log("Song Playing: " + songPlaying);
 			console.log("Song Count: " + songCount);
 		}
-	if((mouseX > 232) && (mouseX < 328) &&
-		(mouseY > 570) && (mouseY < 666)){
+	if((mouseX > 546) && (mouseX < 642) &&
+		(mouseY > 470) && (mouseY < 566)){
 			playButtonON = false;
 			recButtonON = false;
 			checkButtonOn = true;
+
+			cNote = false;
+			dNote = false;
+			eNote = false; 
+			fNote = false; 
+			gNote = false; 
+			aNote = false; 
+			bNote = false;
 
 			stop = true;
 			print("Checking");
@@ -425,10 +445,12 @@ function mousePressed(){
 				if(correctCount == songPlaying.length){
 					console.log("CORRECT");
 					playerCorrect = true;
+					image(music, 440, 250, 96, 96, 192, 0, 96, 96);
 				}
 				if(correctCount != songPlaying.length){
 					console.log("WRONG");
 					playerCorrect = false;
+					image(music, 440, 250, 96, 96, 192, 96, 96, 96);
 				}
 				if(playerCorrect){
 					songCount++;
@@ -439,28 +461,28 @@ function mousePressed(){
 
 function playButton(){
 	if(playButtonON){
-		image(buttons, 20, 570,  96, 96, 96, 0, 96, 96);
+		image(buttons, 334, 470, 96, 96, 96, 0, 96, 96);
 	}
 	else{
-		image(buttons, 20, 570,  96, 96, 0, 0, 96, 96);
+		image(buttons, 334, 470, 96, 96, 0, 0, 96, 96);
 	}
 }
 
 function recordButton(){
 	if(recButtonON){
-		image(buttons, 126, 570, 96, 96, 96, 96, 96, 96);
+		image(buttons, 440, 470, 96, 96, 96, 96, 96, 96);
 	}
 	else{
-		image(buttons, 126, 570, 96, 96, 0, 96, 96, 96);
+		image(buttons, 440, 470, 96, 96, 0, 96, 96, 96);
 	}
 }
 
 function stopButton(){
 	if(checkButtonOn){
-		image(buttons, 232, 570, 96, 96, 96, 192, 96, 96);
+		image(buttons, 546, 470, 96, 96, 96, 192, 96, 96);
 	}
 	else{
-		image(buttons, 232, 570, 96, 96, 0, 192, 96, 96);
+		image(buttons, 546, 470, 96, 96, 0, 192, 96, 96);
 	}
 }
 
@@ -474,28 +496,35 @@ function musicNote(x,y, c){
 
 function noteC(x,y,xTile){
 	image(music, x, y, 96, 96, xTile, 0, 96, 96);
+	image(music, x, y + 95, 96, 64, 0, 96, 96, 64);
 }
 
 function noteD(x,y,xTile){
 	image(music, x, y, 96, 96, xTile, 0, 96, 96);
+	image(music, x, y + 95, 96, 64, 96, 96, 96, 64);
 }
 
 function noteE(x,y,xTile){
 	image(music, x, y, 96, 96, xTile, 0, 96, 96);
+	image(music, x, y + 95, 96, 64, 0, 160, 96, 64);
 }
 
 function noteF(x,y,xTile){
 	image(music, x, y, 96, 96, xTile, 0, 96, 96);
+	image(music, x, y + 95, 96, 64, 96, 160, 96, 64);
 }
 
 function noteG(x,y,xTile){
 	image(music, x, y, 96, 96, xTile, 0, 96, 96);
+	image(music, x, y + 95, 96, 64, 0, 224, 96, 64);
 }
 
 function noteA(x,y,xTile){
 	image(music, x, y, 96, 96, xTile, 0, 96, 96);
+	image(music, x, y + 95, 96, 64, 96, 224, 96, 64);
 }
 
 function noteB(x,y,xTile){
 	image(music, x, y, 96, 96, xTile, 0, 96, 96);
+	image(music, x, y + 95, 96, 64, 0, 288, 96, 64);
 }
