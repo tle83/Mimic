@@ -240,17 +240,6 @@ function serialError(err) {
 
 //GRAPHIC
 function keyPressed(){
-	if(keyCode == 49){
-		console.log(songPlaying);
-		console.log(songCount);
-	}
-	if(keyCode == 50){
-		console.log(inByte);
-	}
-	if(keyCode == 51){
-		isRecording = true;
-		stop = false;
-	}
 	if(keyCode == 67){
 		singleSynth.triggerAttackRelease("C4", "8n");
 		cNote = true;
@@ -432,6 +421,9 @@ function mousePressed(){
 			bNote = false;
 
 			stop = true;
+			
+			serial.write(byte(40));
+
 			print("Checking");
 			console.log("Song Count: " + songCount);
 
