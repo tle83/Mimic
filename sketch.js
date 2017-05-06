@@ -124,10 +124,10 @@ function draw(){
 	stopButton();
 
 	image(music, 345 ,400, 288, 64, 0, 350, 288, 64);
-
+    
 	textSize(18);
-	fill(255);
-	text(playerAnswer + " ", 390, 440);
+    fill(255);
+    text(playerAnswer + " ", 390, 440);
 }
 
 //HARDWARE
@@ -137,7 +137,6 @@ function serialEvent(){
 		singleSynth.triggerAttackRelease("C4", "8n");
 		if(isRecording){
 			append(playerAnswer, "c4");
-			console.log(playerAnswer);
 		}
 		cNote = true;
 		dNote = false;
@@ -151,7 +150,6 @@ function serialEvent(){
 		singleSynth.triggerAttackRelease("D4", "8n");
 		if(isRecording){
 			append(playerAnswer, "d4");
-			console.log(playerAnswer);
 		}
 		cNote = false;
 		dNote = true;
@@ -165,7 +163,6 @@ function serialEvent(){
 		singleSynth.triggerAttackRelease("E4", "8n");
 		if(isRecording){
 			append(playerAnswer, "e4");
-			console.log(playerAnswer);
 		}
 		cNote = false;
 		dNote = false;
@@ -179,7 +176,6 @@ function serialEvent(){
 		singleSynth.triggerAttackRelease("F4", "8n");
 		if(isRecording){
 			append(playerAnswer, "f4");
-			console.log(playerAnswer);
 		}
 		cNote = false;
 		dNote = false;
@@ -193,7 +189,6 @@ function serialEvent(){
 		singleSynth.triggerAttackRelease("G4", "8n");
 		if(isRecording){
 			append(playerAnswer, "g4");
-			console.log(playerAnswer);
 		}
 		
 		cNote = false;
@@ -208,7 +203,6 @@ function serialEvent(){
 		singleSynth.triggerAttackRelease("A4", "8n");
 		if(isRecording){
 			append(playerAnswer, "a4");
-			console.log(playerAnswer);
 		}
 		cNote = false;
 		dNote = false;
@@ -222,7 +216,6 @@ function serialEvent(){
 		singleSynth.triggerAttackRelease("B4", "8n");
 		if(isRecording){
 			append(playerAnswer, "b4");
-			console.log(playerAnswer);
 		}
 		cNote = false;
 		dNote = false;
@@ -232,6 +225,7 @@ function serialEvent(){
 		aNote = false; 
 		bNote = true; 
 	}
+	console.log(playerAnswer);
 }
 
 function serialError(err) {
@@ -330,10 +324,10 @@ function mousePressed(){
 			serial.write(byte(20));
 
 			//checking icon
-			image(music, 440, 250, 96, 96, 192, 192, 96, 96);
+            image(music, 440, 250, 96, 96, 192, 192, 96, 96)
 
-			isPlaying = true;
-			print("Playing");
+            isPlaying = true;
+            stop = false;
 			if(isPlaying){
 				if(songCount == 0){
 					singleSynth2.triggerAttackRelease('d4', '8n', '+0.5');
@@ -343,7 +337,7 @@ function mousePressed(){
 					singleSynth2.triggerAttackRelease('g4', '8n', '+2.5');
 					singleSynth2.triggerAttackRelease('b4', '8n', '+3.0');
 					singleSynth2.triggerAttackRelease('c4', '8n', '+3.5');
-					singleSynth2.triggerAttackRelease('g4', '8n', '+4.0');
+                    singleSynth2.triggerAttackRelease('g4', '8n', '+4.0');
 				}
 				if(songCount == 1){
 					singleSynth2.triggerAttackRelease('a4', '8n', '+0.5');
@@ -386,7 +380,6 @@ function mousePressed(){
 					singleSynth2.triggerAttackRelease('e4', '8n', '+4.0');
 				}
 			}
-
 			console.log("Notes being played: " + songPlaying);
 	}
 	if((mouseX > 440) && (mouseX < 536) &&
@@ -402,7 +395,6 @@ function mousePressed(){
             image(music, 440, 250, 96, 96, 288, 192, 96, 96);
 			
 			playerAnswer = [];
-			print("Recording");
 
 			console.log("Song Playing: " + songPlaying);
 			console.log("Song Count: " + songCount);
@@ -424,8 +416,6 @@ function mousePressed(){
 			stop = true;
 			
 			serial.write(byte(40));
-
-			print("Checking");
 			console.log("Song Count: " + songCount);
 
 			var correctCount = 0;
