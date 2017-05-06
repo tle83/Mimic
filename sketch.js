@@ -320,7 +320,7 @@ function keyPressed(){
 		bNote = true; 
 	}
 	if(isRecording == true && stop == false){
-		for(var j = 0; j <= songPlaying.length; j++){
+		if(playerAnswer.length < songPlaying.length){
 			append(playerAnswer, key.toLowerCase() + "4");
 		}
 		console.log(playerAnswer);
