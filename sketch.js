@@ -398,7 +398,8 @@ function mousePressed(){
 			isRecording = true;
 			stop = false;
 
-			serial.write(byte(30));
+            serial.write(byte(30));
+            image(music, 440, 250, 96, 96, 288, 192, 96, 96);
 			
 			playerAnswer = [];
 			print("Recording");
