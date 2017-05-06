@@ -136,7 +136,9 @@ function serialEvent(){
 	if(inByte == 5){
 		singleSynth.triggerAttackRelease("C4", "8n");
 		if(isRecording){
-			append(playerAnswer, "c4");
+			if(playerAnswer.length < songPlaying.length){
+				append(playerAnswer, "c4");
+			}
 		}
 		cNote = true;
 		dNote = false;
@@ -149,7 +151,9 @@ function serialEvent(){
 	if(inByte == 6){
 		singleSynth.triggerAttackRelease("D4", "8n");
 		if(isRecording){
-			append(playerAnswer, "d4");
+			if(playerAnswer.length < songPlaying.length){
+				append(playerAnswer, "d4");
+			}
 		}
 		cNote = false;
 		dNote = true;
@@ -162,7 +166,9 @@ function serialEvent(){
 	if(inByte == 7){
 		singleSynth.triggerAttackRelease("E4", "8n");
 		if(isRecording){
-			append(playerAnswer, "e4");
+			if(playerAnswer.length < songPlaying.length){
+				append(playerAnswer, "e4");
+			}
 		}
 		cNote = false;
 		dNote = false;
@@ -175,7 +181,9 @@ function serialEvent(){
 	if(inByte == 8){
 		singleSynth.triggerAttackRelease("F4", "8n");
 		if(isRecording){
-			append(playerAnswer, "f4");
+			if(playerAnswer.length < songPlaying.length){
+				append(playerAnswer, "f4");
+			}
 		}
 		cNote = false;
 		dNote = false;
@@ -188,7 +196,9 @@ function serialEvent(){
 	if(inByte == 9){
 		singleSynth.triggerAttackRelease("G4", "8n");
 		if(isRecording){
-			append(playerAnswer, "g4");
+			if(playerAnswer.length < songPlaying.length){
+				append(playerAnswer, "g4");
+			}
 		}
 		
 		cNote = false;
@@ -202,7 +212,9 @@ function serialEvent(){
 	if(inByte == 10){
 		singleSynth.triggerAttackRelease("A4", "8n");
 		if(isRecording){
-			append(playerAnswer, "a4");
+			if(playerAnswer.length < songPlaying.length){
+				append(playerAnswer, "a4");
+			}
 		}
 		cNote = false;
 		dNote = false;
@@ -215,7 +227,9 @@ function serialEvent(){
 	if(inByte == 11){
 		singleSynth.triggerAttackRelease("B4", "8n");
 		if(isRecording){
-			append(playerAnswer, "b4");
+			if(playerAnswer.length < songPlaying.length){
+				append(playerAnswer, "b4");
+			}
 		}
 		cNote = false;
 		dNote = false;
@@ -306,7 +320,9 @@ function keyPressed(){
 		bNote = true; 
 	}
 	if(isRecording == true && stop == false){
-		append(playerAnswer, key.toLowerCase() + "4");
+		for(var j = 0; j <= songPlaying.length; j++){
+			append(playerAnswer, key.toLowerCase() + "4");
+		}
 		console.log(playerAnswer);
 		if(playerAnswer.length > 7){
 			stop = true;
